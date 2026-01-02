@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import fs from "fs";
@@ -9,6 +12,11 @@ import { runInference } from "./utils/runInference.js";
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
+
+// Health check route (Render uses this)
+app.get("/", (req, res) => {
+    res.send("Wardrobe backend is running");
+});
 
 // Load clothing label mappings
 const clothingLabels = JSON.parse(
@@ -30,7 +38,7 @@ let session;
     }
 })();
 
-// Analyze image route
+// Auto-tagging route (your core feature)
 app.post("/analyze-image", async (req, res) => {
     try {
         const { imageBase64 } = req.body;
@@ -62,8 +70,8 @@ app.post("/analyze-image", async (req, res) => {
     }
 });
 
-// Start server
-const PORT = 3000;
+// Start server (Render requires process.env.PORT)
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
 });
