@@ -1,0 +1,52 @@
+# Node.js dependencies
+node_modules/
+
+# Python virtual environments (like model-env)
+model-env/
+venv/
+__pycache__/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Build artifacts
+dist/
+build/
+coverage/
+*.tgz
+
+# Optional: Render cache and deployment artifacts
+.cache/
+render.yaml
+
+# Optional: Ignore test snapshots
+__snapshots__/
+
+# Optional: Ignore uploads or generated assets
+uploads/
+public/assets/
