@@ -43,11 +43,39 @@ app.post("/analyze-image", async (req, res) => {
     try {
         const { imageBase64 } = req.body;
 
+        // -----------------------------
+        // 1. Validate presence
+        // -----------------------------
         if (!imageBase64) {
             return res.status(400).json({ error: "Missing imageBase64" });
         }
 
-        // Run ONNX inference → returns index (0–999)
+        // -----------------------------
+        // 2. Validate format (JPEG/PNG)
+        // -----------------------------
+        if (
+            !imageBase64.startsWith("data:image/jpeg") &&
+            !imageBase64.startsWith("data:image/png")
+        ) {
+            return res.status(400).json({ error: "Unsupported image format" });
+        }
+
+        // -----------------------------
+        // 3. Extract base64 → buffer
+        // -----------------------------
+        const base64Data = imageBase64.split(",")[1];
+        const buffer = Buffer.from(base64Data, "base64");
+
+        // -----------------------------
+        // 4. Validate buffer size
+        // -----------------------------
+        if (buffer.length < 5000) {
+            return res.status(400).json({ error: "Image too small or corrupted" });
+        }
+
+        // -----------------------------
+        // 5. Run ONNX inference
+        // -----------------------------
         const predictionIndex = await runInference(session, imageBase64);
 
         // Convert index → raw ImageNet label
@@ -58,12 +86,16 @@ app.post("/analyze-image", async (req, res) => {
         // Convert raw label → wardrobe category
         const category = clothingLabels[rawLabel] || "Unknown";
 
+        // -----------------------------
+        // 6. Respond
+        // -----------------------------
         res.json({
             success: true,
             category,
             rawLabel,
             index: predictionIndex
         });
+
     } catch (err) {
         console.error("analyze-image error:", err);
         res.status(500).json({ success: false, error: err.message });
