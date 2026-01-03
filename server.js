@@ -78,8 +78,8 @@ app.post("/analyze-image", async (req, res) => {
             return res.status(400).json({ error: "Image too small or corrupted" });
         }
 
-        // 5. Run ONNX inference
-        const predictionIndex = await runInference(session, base64Data);
+        // 5. Run ONNX inference (FIXED: pass buffer, not base64 string)
+        const predictionIndex = await runInference(session, buffer);
 
         // 6. Convert index → raw ImageNet label
         const rawLabel = Object.keys(imagenetSubset).find(

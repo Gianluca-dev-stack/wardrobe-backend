@@ -11,8 +11,8 @@ let session = null;
 export async function loadOnnxModel() {
     if (session) return session;
 
-    // Path to your ONNX model inside /models
-    const modelPath = path.join(__dirname, "mobilenetv2.onnx");
+    // Correct path to your ONNX model inside /tools
+    const modelPath = path.join(process.cwd(), "tools", "mobilenetv2.onnx");
 
     console.log("📦 Loading ONNX model from:", modelPath);
 
